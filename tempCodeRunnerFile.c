@@ -1,1 +1,0 @@
-            printf("%c", CurrentChar1);

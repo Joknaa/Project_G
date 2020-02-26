@@ -2,33 +2,30 @@
 #include <ctype.h>
 #include <malloc.h>
 
-/*  --------> To Do <--------
-    * The nodes might be numbers composed of 2 or more digits .. [I got the idea !]
-    * Write the 'CollectIntigers()' function ..
+//?--------> // ToDo <--------
+//FIXME //!The nodes might be numbers composed of 2 or more digits
 
-*/
-/*  --------> Working On <--------
+//? ----------------  Working On  ------------------
+//TODO Write the 'CollectData()' function ..
 
-*/
-/*  --------> DONE ! <--------
+/*//? -------------------  DONE !! -------------------
     * Referencing the .Dot File ..
     * Checking the stat of the pointer ..
     * 'CheckingForData' function ..
     * Optimazing the Collect Algorithm ..
     * 'GetNumberOfLines' function ..
     * Write the 'CreatTables()' function ..
-
-
 */
 
-// ------------------ Global Variables ------------------
+//* ------------------ Global Variables ------------------
+FILE *myFile;
 int GraphTitleSize = 0;
 int NumberOfLines = 1;
 
-// ---------------------------------------- CheckingForUsefulData ----------------------------------------
-void CheckingForUsefulData(FILE *myFile, int NumberOfLines)
+//* ---------------------------------------- CheckingForUsefulData ----------------------------------------
+void CheckingForUsefulData()
 {
-    char CurrentChar1;
+    char CurrentChar;
     int CurrentLine = 1, CurrentPositionInTitle = 0, DigraphKeywordSize = 9;
 
     // Reseting the cursur position in the file ..
@@ -42,39 +39,40 @@ void CheckingForUsefulData(FILE *myFile, int NumberOfLines)
         if (CurrentPositionInTitle >= DigraphKeywordSize)
         {
             GraphTitleSize++;
-            printf("%c", CurrentChar1);
+            printf("%c", CurrentChar);
         }
-    } while ((CurrentChar1 = fgetc(myFile)) != '{');
+    } while ((CurrentChar = fgetc(myFile)) != '{');
     printf("\nTitle Size: %d", GraphTitleSize);
 
     // collect the usefull Data for each line .. '{' --> ';'  ..
     while (CurrentLine <= NumberOfLines)
     {
         // Last Wanted Character ..
-        while ((CurrentChar1 = fgetc(myFile)) != '"')
+        while ((CurrentChar = fgetc(myFile)) != '"')
         {
             // Nodes are intigers !
-            if (isdigit(CurrentChar1))
+            if (isdigit(CurrentChar))
             {
-                printf("\nNode: %c", CurrentChar1);
+                //printf("\nNode: %c", CurrentChar);
+                CollectData(CurrentChar);
             }
         }
 
         // the start of the Label
-        if (CurrentChar1 == '"')
+        if (CurrentChar == '"')
         {
             // while we are NOT at the end of the Label ..
-            while ((CurrentChar1 = fgetc(myFile)) != '"')
+            while ((CurrentChar = fgetc(myFile)) != '"')
             {
-                printf("\nLabel : %c", CurrentChar1);
+                printf("\nLabel : %c", CurrentChar);
             }
         }
         CurrentLine++;
     }
 }
 
-// ----------------------------------------- GetNumberOfLines -----------------------------------------
-int GetNumberOfLines(FILE *myFile)
+//* ------------------------------------------- GetNumberOfLines -------------------------------------------
+void GetNumberOfLines()
 {
     char CurrentChar = fgetc(myFile);
     while ((CurrentChar = fgetc(myFile)) != '}')
@@ -84,10 +82,9 @@ int GetNumberOfLines(FILE *myFile)
             NumberOfLines++;
         }
     }
-    return NumberOfLines;
 }
 
-// --------------------------------------------- CreatTables ---------------------------------------------
+//* --------------------------------------------- CreatTables ----------------------------------------------
 int *CreatTables()
 {
     int *StartingNodes, *FinishingNodes, *Labels, *GraphName;
@@ -100,11 +97,32 @@ int *CreatTables()
     return StartingNodes, FinishingNodes, Labels, GraphName;
 }
 
-// ------------------------------------------------ MAIN -------------------------------------------------
+//* ---------------------------------------------- CollectData ---------------------------------------------
+void CollectData(char CurrentChar)
+{
+    int Node = 0;
+    char *Label;
+
+    if (isdigit(CurrentChar))
+    {
+        // Collect this number ..
+        do
+        {
+            Node = Node * 10 + (CurrentChar - '0');
+        } while (isdigit(CurrentChar = fgetc(myFile)));
+    }
+    else
+    {
+        // Collect this string ..
+    }
+    printf("\n%d  ", Node);
+}
+
+//* ------------------------------------------------- MAIN -------------------------------------------------
 int main(int argc, char const *argv[])
 {
     //--> Referencing the .Dot File ..
-    FILE *myFile = fopen("Graphviz_files/Labels.dot", "r");
+    myFile = fopen("Graphviz_files/Labels.dot", "r");
 
     //--> Checking the state of the pointer then for Data in the file ..
     if (myFile == NULL)
@@ -113,9 +131,9 @@ int main(int argc, char const *argv[])
     }
     else
     {
-        NumberOfLines = GetNumberOfLines(myFile);
-        CreatTables(NumberOfLines);
-        CheckingForUsefulData(myFile, NumberOfLines);
+        GetNumberOfLines();
+        CreatTables();
+        CheckingForUsefulData();
     }
     fclose(myFile);
     return 0;
