@@ -2,13 +2,22 @@
 #include <ctype.h>
 #include <malloc.h>
 
-//?--------> // ToDo <--------
-//FIXME //!The nodes might be numbers composed of 2 or more digits
+//? ----------------------- FixMe -----------------------
+//! //FIXME : The nodes might be numbers composed of 2 or more digits
 
-//? ----------------  Working On  ------------------
-//TODO Write the 'CollectData()' function ..
+//? ----------------------- ToDo -----------------------
+//* -------->  Phase I :
+//TODO : Constart the Data Matrix ..
 
-/*//? -------------------  DONE !! -------------------
+//* -------->  Phase II :
+//TODO : Scan the Matrix ..
+//TODO : Creat a new .Dot file ..
+//TODO : Show the new graph ..
+
+//? -------------------  Working On  -------------------
+//TODO : Write the 'CollectData()' function ..
+
+/*//? --------------------  DONE !! --------------------
     * Referencing the .Dot File ..
     * Checking the stat of the pointer ..
     * 'CheckingForData' function ..
