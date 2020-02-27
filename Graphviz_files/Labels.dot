@@ -1,5 +1,4 @@
 digraph teeeeeeeeeeeeeee {
 17 -> 2 [ label = "12" ];
 17 -> 2 [ label = "BC" ];
-17 -> 2 [ label = "BC" ];
 }

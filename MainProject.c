@@ -4,10 +4,11 @@
 
 //? ----------------------- FixMe -----------------------
 //! //FIXME : The nodes might be numbers composed of 2 or more digits
+//! //FIXME : If the node is repeated each line, the size of tables would be more than needed ..
 
 //? ----------------------- ToDo -----------------------
 //* -------->  Phase I :
-//TODO : Constart the Data Matrix ..
+//TODO : Constract the Data Matrix ..
 
 //* -------->  Phase II :
 //TODO : Scan the Matrix ..
@@ -16,6 +17,8 @@
 
 //? -------------------  Working On  -------------------
 //TODO : Write the 'CollectData()' function ..
+//todo:     >>> Creat structers to hold data ..
+//todo:         >>> Get the number of nodes and labels to creat the tables in the structers ..
 
 /*//? --------------------  DONE !! --------------------
     * Referencing the .Dot File ..
@@ -26,12 +29,32 @@
     * Write the 'CreatTables()' function ..
 */
 
+//* ----------------------- Defines-----------------------
+
 //* ------------------ Global Variables ------------------
 FILE *myFile;
 int GraphTitleSize = 0;
 int NumberOfLines = 1;
+int NumberOfNodes = 0;
+int *StartingNodes;
+int *FinishingNodes;
+char *Labels;
+char *TableName;
 
-//* ---------------------------------------- CheckingForUsefulData ----------------------------------------
+//* -------------------------------------------- CollectData -------------------------------------------
+void CollectData(char CurrentChar)
+{
+    int NodeID = 0;
+    char *Label;
+
+    do
+    {
+        NodeID = NodeID * 10 + (CurrentChar - '0');
+    } while (isdigit(CurrentChar = fgetc(myFile)));
+    printf("\nNode: %d", NodeID);
+}
+
+//* -------------------------------------- CheckingForUsefulData ----------------------------------------
 void CheckingForUsefulData()
 {
     char CurrentChar;
@@ -51,19 +74,20 @@ void CheckingForUsefulData()
             printf("%c", CurrentChar);
         }
     } while ((CurrentChar = fgetc(myFile)) != '{');
-    printf("\nTitle Size: %d", GraphTitleSize);
 
-    // collect the usefull Data for each line .. '{' --> ';'  ..
+    // collect the usefull Data for each line .. '{' --> '"'  ..
     while (CurrentLine <= NumberOfLines)
     {
         // Last Wanted Character ..
-        while ((CurrentChar = fgetc(myFile)) != '"')
+        while (CurrentChar != '"')
         {
-            // Nodes are intigers !
-            if (isdigit(CurrentChar))
+            while ((CurrentChar = fgetc(myFile)) != '>')
             {
-                //printf("\nNode: %c", CurrentChar);
-                CollectData(CurrentChar);
+                // Nodes are intigers !
+                if (isdigit(CurrentChar))
+                {
+                    CollectData(CurrentChar);
+                }
             }
         }
 
@@ -80,56 +104,70 @@ void CheckingForUsefulData()
     }
 }
 
-//* ------------------------------------------- GetNumberOfLines -------------------------------------------
+//* ----------------------------------------- GetNumberOfLines -----------------------------------------
 void GetNumberOfLines()
 {
     char CurrentChar = fgetc(myFile);
     while ((CurrentChar = fgetc(myFile)) != '}')
     {
-        if (CurrentChar == ';')
+        if (CurrentChar == '\n')
         {
             NumberOfLines++;
         }
     }
 }
 
-//* --------------------------------------------- CreatTables ----------------------------------------------
-int *CreatTables()
+//* ------------------------------------------- CreatTables --------------------------------------------
+int *CreatTemporarilyTables()
 {
-    int *StartingNodes, *FinishingNodes, *Labels, *GraphName;
+    char GraphName = malloc(GraphTitleSize * sizeof(char));
 
-    StartingNodes = malloc(NumberOfLines * sizeof(int));
-    FinishingNodes = malloc(NumberOfLines * sizeof(int));
-    Labels = malloc(NumberOfLines * sizeof(char));
-    GraphName = malloc(GraphTitleSize * sizeof(char));
-
-    return StartingNodes, FinishingNodes, Labels, GraphName;
+    return GraphName;
 }
 
-//* ---------------------------------------------- CollectData ---------------------------------------------
-void CollectData(char CurrentChar)
+//* ----------------------------------------- GetNumberOfNodes -----------------------------------------
+void etat(FILE *fichier_pointeur)
 {
-    int Node = 0;
-    char *Label;
+    int i = 0, k, j, compteur = 1;
+    char char_actuel;
 
-    if (isdigit(CurrentChar))
+    StartingNodes = (int *)malloc(sizeof(int) * compteur);
+
+    while ((char_actuel = fgetc(fichier_pointeur)) != '}')
     {
-        // Collect this number ..
-        do
+        if (isdigit(char_actuel))
         {
-            Node = Node * 10 + (CurrentChar - '0');
-        } while (isdigit(CurrentChar = fgetc(myFile)));
+            StartingNodes = (int *)realloc(StartingNodes, sizeof(int) * compteur);
+            StartingNodes[i] = char_actuel - '0';
+            i++;
+            compteur++;
+        }
+
+        for (i = 0; i < compteur - 1; i++)
+        {
+            for (j = i + 1; j < compteur - 1; j++)
+            {
+                if (StartingNodes[j] == StartingNodes[i])
+                {
+                    for (k = j; k < compteur - 1; k++)
+                    {
+                        StartingNodes[k] = StartingNodes[k + 1];
+                    }
+                    compteur--;
+                }
+            }
+        }
     }
-    else
+    for (i = 0; i < compteur - 1; i++)
     {
-        // Collect this string ..
+        printf("%d\n", StartingNodes[i]);
     }
-    printf("\n%d  ", Node);
 }
 
-//* ------------------------------------------------- MAIN -------------------------------------------------
+//* ----------------------------------------------- MAIN -----------------------------------------------
 int main(int argc, char const *argv[])
 {
+
     //--> Referencing the .Dot File ..
     myFile = fopen("Graphviz_files/Labels.dot", "r");
 
@@ -141,7 +179,7 @@ int main(int argc, char const *argv[])
     else
     {
         GetNumberOfLines();
-        CreatTables();
+        CreatTemporarilyTables();
         CheckingForUsefulData();
     }
     fclose(myFile);
