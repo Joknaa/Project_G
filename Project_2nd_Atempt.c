@@ -18,22 +18,23 @@ char CurrentChar;
 Graph myGraph;
 
 //* -----------------------------------> Functions :
-char *GetFile();
 void CountLines();
 void StoreNodes();
 void StoreLabels();
 void SetUpGraphVars();
 void PrintData();
+void ShowImage();
 
-//* ----------------------------------------------------> Main : <----------------------------------------------------
+//* ----------------------------------------------------> Main :
 int main()
 {
     system("cls");
     int CurrentLine = 1;
     char *myFileName, *myFileRoot = malloc((strlen("Graphviz_files/ ")) * sizeof(char));
 
-    printf("Enter the file name : ");
-    scanf("%s", myFileName);
+    /*printf("Enter the file name : ");
+    scanf("%s", myFileName);*/
+    myFileName = "Labels.dot";
 
     if (myFile = fopen(myFileName, "r"))
     {
@@ -47,6 +48,7 @@ int main()
             CurrentLine++;
         }
         PrintData();
+        ShowImage(myFileName);
     }
     else
     {
@@ -56,11 +58,23 @@ int main()
     return 0;
 }
 
+//* -----------------------------------> ShowImage :
+void ShowImage(char *myFileName)
+{
+    char myCommande[] = "dot -Tpng ";
+    char pictureName[] = "ImageTest.png";
+    strcat(myCommande, myFileName);
+    strcat(myCommande, " -o ");
+    strcat(myCommande, pictureName);
+    system(myCommande);
+}
+
+//* -----------------------------------> PrintData :
 void PrintData()
 {
     for (int i = 0; i < Ni; i++)
     {
-        printf("\n(%4d) ------[%7s]------> (%d)", myGraph.Nodes[i][0], myGraph.Labels[i], myGraph.Nodes[i][1]);
+        printf("\n(%d) ------[%s]------> (%d)", myGraph.Nodes[i][0], myGraph.Labels[i], myGraph.Nodes[i][1]);
     }
 }
 

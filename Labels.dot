@@ -1,6 +1,6 @@
 digraph g {
-1251->2[label="ab12"];
-333->444[label="ce"];
-5->666[label="efuu56"];
-888->999[label="ef56"];
+0->2[label="4"];
+0->8[label="E"];
+2->7[label="AB"];
+8->7[label="D"];
 }
