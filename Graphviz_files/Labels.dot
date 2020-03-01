@@ -1,6 +1,0 @@
-digraph g {
-111->222[label="ab12"];
-333->444[label="ce"];
-555->666[label="ef56"];
-555->666[label="ef56"];
-}
