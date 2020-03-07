@@ -1,8 +1,0 @@
-digraph MyGraph{
-0 -> 1 [label="a"];
-0 -> 1 [label="a"];
-0 -> 1 [label="a"];
-0 -> 1 [label="a"];
-
-
-}
