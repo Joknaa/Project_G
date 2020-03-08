@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "**/*.yml": true,
+        "**/*.exe": true
+    }
+}
