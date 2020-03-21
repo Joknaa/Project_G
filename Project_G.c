@@ -34,9 +34,9 @@ int main()
     system("cls");
     myFileName = (char *)malloc(50 * sizeof(char));
 
-    /*printf("Enter the file name : ");
-    scanf("%s", myFileName);*/
-    myFileName = "Labels.dot";
+    printf("Enter the file name : ");
+    scanf("%s", myFileName);
+    
     if ((myFile = fopen(myFileName, "r")) == NULL)
     {
         printf("\nError! file doesn't exist x_x\n");
